@@ -3,9 +3,9 @@
 }
 <div class="container">
     <div class="jumbotron">
-        <h1>Make A ToDo List!</h1>
+        <h1>Make A To-Do List!</h1>
     </div>
-    <form action="/task/list/add" method="post">
+    <form action="/task/new" method="post">
         <div class="form-group">
             <label for="new-task">Add a new task</label>
             <input class="form-control" id="new-task" name="new-task" type="text" autofocus>
@@ -15,20 +15,27 @@
         </div>
     </form>
 
-    @if (Model.Count != 0)
+    @if (Model["TaskList"].Count != 0)
     {
     <div class="well">
         <h2>Your List:</h2>
         <ul>
-        @foreach(string task in Model)
-        {
-        <li>@task</li>
-        }
+          @foreach(var task in Model["TaskList"])
+          {
+            <li><a href="/tasks/@task.Id">@task.Description</a></li>
+          }
         </ul>
     </div>
 
-    <form action="/task/list/clear" method="post">
+    <form action="/task/clear" method="post">
         <button class="btn" type="submit" name="button">Clear All Tasks</button>
     </form>
+    }
+
+    @if (Model["CurrentTask"] != null)
+    {
+      <div class="well">
+        <h1>@Model["CurrentTask"].Description</h1>
+      </div>
     }
 </div>

@@ -7,27 +7,46 @@ namespace ToDoList.Controllers
 {
     public class HomeController : Controller
     {
-        [Route("/")]
-        public ActionResult Index()
+        private Dictionary<string, Object> _model = new Dictionary<string, Object>(){};
+        public HomeController()
         {
-            return View(Task.GetAll());
+            _model.Add("TaskList", null);
+            _model.Add("CurrentTask", null);
         }
 
-        [HttpPost("/task/list/add"), ActionName("Index")]
+        [HttpGet("/")]
+        public ActionResult Index()
+        {
+            _model["TaskList"] = Task.GetAll();
+            return View(_model);
+        }
+
+        [HttpPost("/task/new"), ActionName("Index")]
         public ActionResult IndexPost()
         {
             if (Request.Form["new-task"] != "")
             {
                 Task newTask = new Task (Request.Form["new-task"]);
             }
-            return View(Task.GetAll());
+            _model["TaskList"] = Task.GetAll();
+            return View(_model);
         }
 
-        [HttpPost("/task/list/clear"), ActionName("Index")]
+        [HttpPost("/task/clear"), ActionName("Index")]
         public ActionResult TaskListClear()
         {
             Task.ClearAll();
-            return View(Task.GetAll());
+            _model["TaskList"] = Task.GetAll();
+            return View(_model);
+        }
+
+        [HttpGet("/tasks/{id}"), ActionName("Index")]
+        public ActionResult TaskDetail(int id)
+        {
+            Task task = Task.Find(id);
+            _model["TaskList"] = Task.GetAll();
+            _model["CurrentTask"] = task;
+            return View(_model);
         }
     }
 }
