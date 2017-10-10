@@ -1,12 +1,12 @@
 <script type="text/javascript" src="/js/FormValidation.js"></script>
 
 <form id="add-task" action="/task/new" method="post">
-    <div class="form-group">
-        <label for="task-name">Task</label>
+    <div id="task-name-wrapper" class="form-group">
+        <label class="form-label" for="task-name">Task</label>
         <input class="form-control" id="task-name" name="task-name" type="text" autofocus>
     </div>
-    <div class="form-group">
-        <label for="task-description">Description</label>
+    <div id="task-description-wrapper" class="form-group">
+        <label class="form-label" for="task-description">Description</label>
         <textarea class="form-control" id="task-description" name="task-description"></textarea>
     </div>
     <div class="form-group">
