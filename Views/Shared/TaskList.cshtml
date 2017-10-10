@@ -1,0 +1,16 @@
+@if (Model["TaskList"].Count != 0)
+{
+  <div class="well">
+      <h2>Your List:</h2>
+      <ul>
+        @foreach(var task in Model["TaskList"])
+        {
+          <li><a href="/tasks/@task.Id">@task.Name</a></li>
+        }
+      </ul>
+  </div>
+
+  <form action="/task/clear" method="post">
+      <button class="btn" type="submit" name="button">Clear All Tasks</button>
+  </form>
+}

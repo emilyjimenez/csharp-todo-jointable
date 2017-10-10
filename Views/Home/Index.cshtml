@@ -5,42 +5,15 @@
     <div class="jumbotron">
         <h1>Make A To-Do List!</h1>
     </div>
-    <form action="/task/new" method="post">
-        <div class="form-group">
-            <label for="task-name">Task</label>
-            <input class="form-control" id="task-name" name="task-name" type="text" autofocus>
-        </div>
-        <div class="form-group">
-            <label for="task-description">Description</label>
-            <textarea class="form-control" id="task-description" name="task-description"></textarea>
-        </div>
-        <div class="form-group">
-            <button class="btn" type="submit">Submit</button>
-        </div>
-    </form>
-
-    @if (Model["TaskList"].Count != 0)
-    {
-    <div class="well">
-        <h2>Your List:</h2>
-        <ul>
-          @foreach(var task in Model["TaskList"])
-          {
-            <li><a href="/tasks/@task.Id">@task.Name</a></li>
-          }
-        </ul>
-    </div>
-
-    <form action="/task/clear" method="post">
-        <button class="btn" type="submit" name="button">Clear All Tasks</button>
-    </form>
-    }
-
-    @if (Model["CurrentTask"] != null)
-    {
-      <div class="well">
-        <h2>@Model["CurrentTask"].Name</h2>
-        <p>@Model["CurrentTask"].Description</p>
+    <div class="row">
+      <div class="col-md-6">
+        @Html.Partial("TaskForm")
       </div>
-    }
+      <div class="col-md-6">
+        @Html.Partial("TaskList")
+      </div>
+    </div>
+    <div class="row">
+      @Html.Partial("TaskSelected")
+    </div>
 </div>

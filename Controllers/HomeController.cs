@@ -11,7 +11,7 @@ namespace ToDoList.Controllers
         public HomeController()
         {
             _model.Add("TaskList", null);
-            _model.Add("CurrentTask", null);
+            _model.Add("SelectedTask", null);
         }
 
         [HttpGet("/")]
@@ -45,7 +45,7 @@ namespace ToDoList.Controllers
         {
             Task task = Task.Find(id);
             _model["TaskList"] = Task.GetAll();
-            _model["CurrentTask"] = task;
+            _model["SelectedTask"] = task;
             return View(_model);
         }
     }
