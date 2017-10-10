@@ -7,8 +7,12 @@
     </div>
     <form action="/task/new" method="post">
         <div class="form-group">
-            <label for="new-task">Add a new task</label>
-            <input class="form-control" id="new-task" name="new-task" type="text" autofocus>
+            <label for="task-name">Task</label>
+            <input class="form-control" id="task-name" name="task-name" type="text" autofocus>
+        </div>
+        <div class="form-group">
+            <label for="task-description">Description</label>
+            <textarea class="form-control" id="task-description" name="task-description"></textarea>
         </div>
         <div class="form-group">
             <button class="btn" type="submit">Submit</button>
@@ -22,7 +26,7 @@
         <ul>
           @foreach(var task in Model["TaskList"])
           {
-            <li><a href="/tasks/@task.Id">@task.Description</a></li>
+            <li><a href="/tasks/@task.Id">@task.Name</a></li>
           }
         </ul>
     </div>
@@ -35,7 +39,8 @@
     @if (Model["CurrentTask"] != null)
     {
       <div class="well">
-        <h1>@Model["CurrentTask"].Description</h1>
+        <h2>@Model["CurrentTask"].Name</h2>
+        <p>@Model["CurrentTask"].Description</p>
       </div>
     }
 </div>

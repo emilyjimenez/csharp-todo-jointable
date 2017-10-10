@@ -4,12 +4,14 @@ namespace ToDoList.Models
 {
     public class Task
     {
+        public string Name {get; set;}
         public string Description {get; set;}
         public int Id {get; private set;}
         private static List<Task> _instances = new List<Task> {};
 
-        public Task (string description)
+        public Task (string name, string description)
         {
+            Name = name;
             Description = description;
             _instances.Add(this);
             Id = _instances.Count;

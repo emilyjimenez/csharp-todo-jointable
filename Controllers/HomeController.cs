@@ -24,9 +24,9 @@ namespace ToDoList.Controllers
         [HttpPost("/task/new"), ActionName("Index")]
         public ActionResult IndexPost()
         {
-            if (Request.Form["new-task"] != "")
+            if (Request.Form["task-name"] != "" && Request.Form["task-description"] != "")
             {
-                Task newTask = new Task (Request.Form["new-task"]);
+                Task newTask = new Task(Request.Form["task-name"], Request.Form["task-description"]);
             }
             _model["TaskList"] = Task.GetAll();
             return View(_model);
