@@ -7,46 +7,85 @@ namespace ToDoList.Controllers
 {
     public class HomeController : Controller
     {
-        private Dictionary<string, Object> _model = new Dictionary<string, Object>(){};
-        public HomeController()
-        {
-            _model.Add("TaskList", null);
-            _model.Add("SelectedTask", null);
-        }
-
         [HttpGet("/")]
-        public ActionResult Index()
+        public ActionResult Categories()
         {
-            _model["TaskList"] = Task.GetAll();
-            return View(_model);
+            List<Category> model = Category.GetAll();
+            return View(model);
         }
 
-        [HttpPost("/task/new"), ActionName("Index")]
-        public ActionResult IndexPost()
+        [HttpPost("/category/new")]
+        public ActionResult AddCategory()
         {
-            if (Request.Form["task-name"] != "" && Request.Form["task-description"] != "")
-            {
-                Task newTask = new Task(Request.Form["task-name"], Request.Form["task-description"], int.Parse(Request.Form["task-categoryid"]));
-            }
-            _model["TaskList"] = Task.GetAll();
-            return View(_model);
+            string categoryName = Request.Form["category-name"];
+            Category category = new Category(categoryName);
+            category.Save();
+            List<Category> model = Category.GetAll();
+            return View("Categories", model);
         }
 
-        [HttpPost("/task/clear"), ActionName("Index")]
-        public ActionResult TaskListClear()
+        [HttpPost("/categories/clear")]
+        public ActionResult ClearCategories()
         {
-            Task.ClearAll();
-            _model["TaskList"] = Task.GetAll();
-            return View(_model);
+            Category.ClearAll();
+            List<Category> model = Category.GetAll();
+            return View("Categories", model);
         }
 
-        [HttpGet("/tasks/{id}"), ActionName("Index")]
-        public ActionResult TaskDetail(int id)
+        [HttpGet("/category/{id}")]
+        public ActionResult CategoryDetails(int id)
         {
-            Task task = Task.Find(id);
-            _model["TaskList"] = Task.GetAll();
-            _model["SelectedTask"] = task;
-            return View(_model);
+            Dictionary<string, object> model = new Dictionary<string, object> {};
+            model.Add("selected-task", null);
+            Category selectedCategory = Category.Find(id);
+            model.Add("this-category", selectedCategory);
+            List<Task> categoryTasks = selectedCategory.GetTasks();
+            model.Add("category-tasks", categoryTasks);
+            return View("CategoryTasks", model);
+        }
+
+        [HttpPost("/category/{categoryId}/task/new")]
+        public ActionResult AddTask(int categoryId)
+        {
+            // add a task
+            string taskName = Request.Form["task-name"];
+            string taskDescription = Request.Form["task-description"];
+            Task task = new Task(taskName, taskDescription, categoryId);
+            task.Save();
+
+            Dictionary<string, object> model = new Dictionary<string, object> {};
+            model.Add("selected-task", null);
+            Category selectedCategory = Category.Find(categoryId);
+            model.Add("this-category", selectedCategory);
+            List<Task> categoryTasks = selectedCategory.GetTasks();
+            model.Add("category-tasks", categoryTasks);
+            return View("CategoryTasks", model);
+        }
+
+        [HttpGet("/category/{categoryId}/task/{taskId}")]
+        public ActionResult TaskDetails(int categoryId, int taskId)
+        {
+            Dictionary<string, object> model = new Dictionary<string, object> {};
+            Task selectedTask = Task.Find(taskId);
+            model.Add("selected-task", selectedTask);
+            Category selectedCategory = Category.Find(categoryId);
+            model.Add("this-category", selectedCategory);
+            List<Task> categoryTasks = selectedCategory.GetTasks();
+            model.Add("category-tasks", categoryTasks);
+            return View("CategoryTasks", model);
+        }
+
+        [HttpPost("/category/{id}/clear")]
+        public ActionResult ClearCategoryTasks(int id)
+        {
+            Dictionary<string, object> model = new Dictionary<string, object> {};
+            model.Add("selected-task", null);
+            Category selectedCategory = Category.Find(id);
+            model.Add("this-category", selectedCategory);
+            selectedCategory.ClearTasks();
+            List<Task> categoryTasks = selectedCategory.GetTasks();
+            model.Add("category-tasks", categoryTasks);
+            return View("CategoryTasks", model);
         }
     }
 }

@@ -104,7 +104,27 @@ namespace ToDoList.Models
           }
           return allcategoryTasks;
         }
+        public void ClearTasks()
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
 
+            var cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"DELETE FROM tasks WHERE category_id = @CategoryId;";
+
+            MySqlParameter categoryId = new MySqlParameter();
+            categoryId.ParameterName = "@CategoryId";
+            categoryId.Value = Id;
+            cmd.Parameters.Add(categoryId);
+
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+        }
         public static Category Find(int searchId)
         {
             MySqlConnection conn = DB.Connection();
