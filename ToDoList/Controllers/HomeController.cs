@@ -26,7 +26,7 @@ namespace ToDoList.Controllers
         {
             if (Request.Form["task-name"] != "" && Request.Form["task-description"] != "")
             {
-                Task newTask = new Task(Request.Form["task-name"], Request.Form["task-description"]);
+                Task newTask = new Task(Request.Form["task-name"], Request.Form["task-description"], int.Parse(Request.Form["task-categoryid"]));
             }
             _model["TaskList"] = Task.GetAll();
             return View(_model);

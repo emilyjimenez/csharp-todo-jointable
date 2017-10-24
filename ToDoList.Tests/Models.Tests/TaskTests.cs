@@ -24,19 +24,21 @@ namespace ToDoList.Models.Tests
 
             Assert.AreEqual(0, result);
         }
+
         [TestMethod]
         public void Equals_ReturnsTrueIfDescriptionsAreTheSame_Task()
         {
-            Task firstTask = new Task("Mow the lawn", "Make sure you mow the lawn");
-            Task secondTask = new Task("Mow the lawn", "Make sure you mow the lawn");
+            Task firstTask = new Task("Mow the lawn", "Make sure you mow the lawn", 1);
+            Task secondTask = new Task("Mow the lawn", "Make sure you mow the lawn", 1);
 
             Assert.AreEqual(firstTask, secondTask);
         }
+
         [TestMethod]
         public void Save_SavesToDatabase_TaskList()
         {
             // Arrange
-            Task testTask = new Task("Mow the lawn", "3 cm exactly");
+            Task testTask = new Task("Mow the lawn", "3 cm exactly", 1);
 
             // Act
             testTask.Save();
@@ -46,10 +48,11 @@ namespace ToDoList.Models.Tests
             // Assert
             CollectionAssert.AreEqual(testList, result);
         }
+
         [TestMethod]
         public void Save_AssignsIdToObject_Id()
         {
-            Task testTask = new Task("Mow the lawn", "3 cm exactly");
+            Task testTask = new Task("Mow the lawn", "3 cm exactly", 1);
             testTask.Save();
 
             Task savedTask = Task.GetAll()[0];
@@ -59,12 +62,13 @@ namespace ToDoList.Models.Tests
 
             Assert.AreEqual(testId, result);
         }
+
         [TestMethod]
         public void Save_AssignsIdToMultipleObjects_Ids()
         {
-            Task task1 = new Task("Mow the lawn", "3 cm exactly");
+            Task task1 = new Task("Mow the lawn", "3 cm exactly", 1);
             task1.Save();
-            Task task2 = new Task("Water the plants", "but not too much");
+            Task task2 = new Task("Water the plants", "but not too much", 1);
             task2.Save();
 
             List<Task> allTasks = Task.GetAll();
@@ -72,10 +76,11 @@ namespace ToDoList.Models.Tests
             Assert.AreEqual(allTasks[0].Id, task1.Id);
             Assert.AreEqual(allTasks[1].Id, task2.Id);
         }
+
         [TestMethod]
         public void Find_FindsTaskInDatabase_Task()
         {
-            Task testTask = new Task("Mow the lawn", "3 cm exactly");
+            Task testTask = new Task("Mow the lawn", "3 cm exactly", 1);
             testTask.Save();
 
             Task foundTask = Task.Find(testTask.Id);

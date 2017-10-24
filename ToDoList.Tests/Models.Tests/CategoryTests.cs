@@ -25,6 +25,22 @@ namespace ToDoList.Models.Tests
 
             Assert.AreEqual(0, result);
         }
+
+        [TestMethod]
+        public void GetTasks_RetrievesAllTasksWithCategory_TaskList()
+        {
+          Category testCategory = new Category("Household chores");
+          testCategory.Save();
+          Task firstTask = new Task("Mow the lawn", "3 cm exactly",  testCategory.Id);
+          firstTask.Save();
+          Task secondTask = new Task("Do the dishes", "dont forget the pans",  testCategory.Id);
+          secondTask.Save();
+
+          List<Task> testTaskList = new List<Task> {firstTask, secondTask};
+          List<Task> resultTaskList = testCategory.GetTasks();
+          CollectionAssert.AreEqual(testTaskList, resultTaskList);
+        }
+
         [TestMethod]
         public void Equals_ReturnsTrueForSameName_Category()
         {
