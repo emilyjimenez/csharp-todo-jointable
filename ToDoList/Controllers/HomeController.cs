@@ -28,6 +28,7 @@ namespace ToDoList.Controllers
         public ActionResult ClearCategories()
         {
             Category.ClearAll();
+            Task.ClearAll();
             List<Category> model = Category.GetAll();
             return View("Categories", model);
         }
