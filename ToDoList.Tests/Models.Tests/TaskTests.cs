@@ -18,6 +18,48 @@ namespace ToDoList.Models.Tests
         }
 
         [TestMethod]
+          public void GetCategories_ReturnsAllTaskCategories_CategoryList()
+          {
+            //Arrange
+            Task testTask = new Task("Mow the lawn", "describe");
+            testTask.Save();
+
+            Category testCategory1 = new Category("Home stuff");
+            testCategory1.Save();
+
+            Category testCategory2 = new Category("Work stuff");
+            testCategory2.Save();
+
+            //Act
+            testTask.AddCategory(testCategory1);
+            List<Category> result = testTask.GetCategories();
+            List<Category> testList = new List<Category> {testCategory1};
+
+            //Assert
+            CollectionAssert.AreEqual(testList, result);
+          }
+
+        [TestMethod]
+         public void AddCategory_AddsCategoryToTask_CategoryList()
+         {
+           //Arrange
+           Task testTask = new Task("Mow the lawn", "stuff");
+           testTask.Save();
+
+           Category testCategory = new Category("Home stuff");
+           testCategory.Save();
+
+           //Act
+           testTask.AddCategory(testCategory);
+
+           List<Category> result = testTask.GetCategories();
+           List<Category> testList = new List<Category>{testCategory};
+
+           //Assert
+           CollectionAssert.AreEqual(testList, result);
+         }
+
+        [TestMethod]
         public void GetAll_DatabaseEmptyAtFirst_0()
         {
             int result = Task.GetAll().Count;
@@ -28,8 +70,8 @@ namespace ToDoList.Models.Tests
         [TestMethod]
         public void Equals_ReturnsTrueIfDescriptionsAreTheSame_Task()
         {
-            Task firstTask = new Task("Mow the lawn", "Make sure you mow the lawn", 1);
-            Task secondTask = new Task("Mow the lawn", "Make sure you mow the lawn", 1);
+            Task firstTask = new Task("Mow the lawn", "Make sure you mow the lawn");
+            Task secondTask = new Task("Mow the lawn", "Make sure you mow the lawn");
 
             Assert.AreEqual(firstTask, secondTask);
         }
@@ -38,7 +80,7 @@ namespace ToDoList.Models.Tests
         public void Save_SavesToDatabase_TaskList()
         {
             // Arrange
-            Task testTask = new Task("Mow the lawn", "3 cm exactly", 1);
+            Task testTask = new Task("Mow the lawn", "3 cm exactly");
 
             // Act
             testTask.Save();
@@ -52,7 +94,7 @@ namespace ToDoList.Models.Tests
         [TestMethod]
         public void Save_AssignsIdToObject_Id()
         {
-            Task testTask = new Task("Mow the lawn", "3 cm exactly", 1);
+            Task testTask = new Task("Mow the lawn", "3 cm exactly");
             testTask.Save();
 
             Task savedTask = Task.GetAll()[0];
@@ -66,9 +108,9 @@ namespace ToDoList.Models.Tests
         [TestMethod]
         public void Save_AssignsIdToMultipleObjects_Ids()
         {
-            Task task1 = new Task("Mow the lawn", "3 cm exactly", 1);
+            Task task1 = new Task("Mow the lawn", "3 cm exactly");
             task1.Save();
-            Task task2 = new Task("Water the plants", "but not too much", 1);
+            Task task2 = new Task("Water the plants", "but not too much");
             task2.Save();
 
             List<Task> allTasks = Task.GetAll();
@@ -80,12 +122,35 @@ namespace ToDoList.Models.Tests
         [TestMethod]
         public void Find_FindsTaskInDatabase_Task()
         {
-            Task testTask = new Task("Mow the lawn", "3 cm exactly", 1);
+            Task testTask = new Task("Mow the lawn", "3 cm exactly");
             testTask.Save();
 
             Task foundTask = Task.Find(testTask.Id);
 
             Assert.AreEqual(testTask, foundTask);
+        }
+
+        [TestMethod]
+        public void Delete_DeletesTaskAssociationsFromDatabase_TaskList()
+        {
+          //Arrange
+          Category testCategory = new Category("Home stuff");
+          testCategory.Save();
+
+          string testName = "Mow the lawn";
+          string testDescription = "stuff";
+          Task testTask = new Task(testName, testDescription);
+          testTask.Save();
+
+          //Act
+          testTask.AddCategory(testCategory);
+          testTask.Delete();
+
+          List<Task> resultCategoryTasks = testCategory.GetTasks();
+          List<Task> testCategoryTasks = new List<Task> {};
+
+          //Assert
+          CollectionAssert.AreEqual(testCategoryTasks, resultCategoryTasks);
         }
     }
 }
