@@ -14,8 +14,30 @@ namespace ToDoList.Models.Tests
         }
         public void Dispose()
         {
-          Task.ClearAll();
           Category.ClearAll();
+          Task.ClearAll();
+        }
+
+        [TestMethod]
+        public void Delete_DeletesCategoryAssociationsFromDatabase_CategoryList()
+        {
+          //Arrange
+          Task testTask = new Task("mow the lawn","exactly 3 inches");
+          testTask.Save();
+
+          string testName = "Home stuff";
+          Category testCategory = new Category(testName);
+          testCategory.Save();
+
+          //Act
+          testCategory.AddTask(testTask);
+          testCategory.Delete();
+
+          List<Category> resultTaskCategories = testTask.GetCategories();
+          List<Category> testTaskCategories = new List<Category> {};
+
+          //Assert
+          CollectionAssert.AreEqual(testTaskCategories, resultTaskCategories);
         }
 
         [TestMethod]

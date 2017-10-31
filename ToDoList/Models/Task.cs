@@ -16,6 +16,41 @@ namespace ToDoList.Models
             Description = description;
             Id = id;
         }
+
+        public void Update(string newName, string newDescription)
+        {
+          MySqlConnection conn = DB.Connection();
+          conn.Open();
+          var cmd = conn.CreateCommand() as MySqlCommand;
+          cmd.CommandText = @"UPDATE tasks SET name = @newName, description = @newDescription WHERE id = @searchId;";
+
+          MySqlParameter searchId = new MySqlParameter();
+          searchId.ParameterName = "@searchId";
+          searchId.Value = Id;
+          cmd.Parameters.Add(searchId);
+
+          MySqlParameter name = new MySqlParameter();
+          name.ParameterName = "@newName";
+          name.Value = newName;
+          cmd.Parameters.Add(name);
+
+          MySqlParameter description = new MySqlParameter();
+          description.ParameterName = "@newDescription";
+          description.Value = newDescription;
+          cmd.Parameters.Add(description);
+
+          cmd.ExecuteNonQuery();
+          Name = newName;
+          Description = newDescription;
+          
+          conn.Close();
+          if (conn != null)
+          {
+              conn.Dispose();
+          }
+        }
+
+
         public void Delete()
         {
           MySqlConnection conn = DB.Connection();
@@ -182,7 +217,7 @@ namespace ToDoList.Models
             conn.Open();
 
             var cmd = conn.CreateCommand() as MySqlCommand;
-            cmd.CommandText =  @"SELECT * FROM `tasks` WHERE id = @thisId;";
+            cmd.CommandText =  @"SELECT * FROM tasks WHERE id = @thisId;";
 
             MySqlParameter thisId = new MySqlParameter();
             thisId.ParameterName = "@thisId";

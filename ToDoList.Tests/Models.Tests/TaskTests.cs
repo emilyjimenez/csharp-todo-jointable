@@ -15,6 +15,22 @@ namespace ToDoList.Models.Tests
         public void Dispose()
         {
             Task.ClearAll();
+            Category.ClearAll();
+        }
+        [TestMethod]
+        public void Update_UpdateNameDescriptioninTask_Task()
+        {
+          Task testTask = new Task("Thing", "otherthing");
+          testTask.Save();
+
+          string newName = "Different thing";
+          string newDescription = "Different otherthing";
+
+          Task newTask = new Task(newName, newDescription);
+          testTask.Update(newName, newDescription);
+
+          Assert.AreEqual(newTask.Name, testTask.Name);
+          Assert.AreEqual(newTask.Description, testTask.Description);
         }
 
         [TestMethod]
